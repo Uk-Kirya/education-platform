@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+{% load static %}
+
+<head>
+    <title>{% block title %} Title {% endblock %}</title>
+    <meta charset="utf-8">
+    <link rel="shortcut icon" href="{% static 'fav.png' %}" type="image/png">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body class="d-flex flex-column">
+
+    {% block content %}
+        Content
+    {% endblock %}
+
+    {% include 'includes/scripts.html' %}
+
+</body>
+</html>

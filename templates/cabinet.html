@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+
+{% load custom_filters %}
+{% load static %}
+
+{% block title %}
+    Личный кабинет — LosDesign
+{% endblock %}
+
+{% block content %}
+
+    {% include 'includes/header.html' %}
+
+    <main>
+        {% if user.profile.is_active %}
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="header__block">
+                            <h2>Привет, {% firstof user.profile.name user.username %}!</h2>
+                            <p>{{ greeting }}</p>
+                        </div>
+                        <div class="statusbar__header">
+                            Выполнено {{ lesson_done|length }} из {{ lessons|length }} заданий
+                            <div class="progress">
+                                <div class="progress-bar" role="progressbar" style="width: {{ count_lessons_percent }}%" aria-valuenow="{{ count_lessons_percent }}" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                        </div>
+                    </div>
+                    {% for module in modules %}
+                        <div class="col-md-6 col-lg-4">
+                            <div class="module">
+                                <a href="{% url 'cabinet:module' slug=module.slug %}">
+                                    {% if lessons_with_homework|get_item:module.id > 0 %}
+                                        {% if lessons_done_count|get_item:module.id == lessons_with_homework|get_item:module.id %}
+                                            <picture class="is_done">
+                                                <img src="{% static 'img/done.svg' %}" alt="">
+                                            </picture>
+                                        {% else %}
+                                            <span>Выполнено {{ lessons_done_count|get_item:module.id }} из {{ lessons_with_homework|get_item:module.id }} заданий</span>
+                                        {% endif %}
+                                    {% endif %}
+                                    <div class="ratio ratio-16x9">
+                                        <div>
+                                            <picture>
+                                                {% if module.picture %}
+                                                    <img src="{{ module.picture.url }}" alt="">
+                                                {% else %}
+                                                    <img src="{% static 'img/lorem.svg' %}" alt="">
+                                                {% endif %}
+                                            </picture>
+                                        </div>
+                                    </div>
+                                    {{ module.title }}
+                                </a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% else %}
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="header__block">
+                            <h2>Привет, {% firstof user.profile.name user.username %}!</h2>
+                            <p>К сожалению, курс пока не доступен.</p>
+                        </div>
+                    </div>
+                    <div class="col-12 pay__info">
+                        <div>
+                            <picture>
+                                <img src="{% static 'img/pay.png' %}" alt="">
+                            </picture>
+                            <div>
+                                <h4>Оплата курса</h4>
+                                {% if payment_status == 'pending' %}
+                                    <p>Вы уже оплатили курс.</p>
+                                    <p class="pending">
+                                        Оплата в обработке ...
+                                        <a href="{% url 'cabinet:was_paid_for' %}">Обновить статус</a>
+                                    </p>
+                                {% else %}
+                                    <p>Перед началом обучения, вам необходимо произвести оплату за курс в размере <b>20.000 рублей.</b></p>
+                                    <a href="{% url 'cabinet:create_payment' %}">Оплатить курс</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div>
+                            <div class="ratio ratio-16x9">
+                                <div>
+                                    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
+                                    <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
+
+                                    <video id="player" playsinline controls>
+                                        <source src="{% static 'start.mp4' %}" type="video/mp4" />
+                                    </video>
+
+                                    <script>
+                                        const player = new Plyr('#player', {
+                                            controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'fullscreen'],
+                                            settings: [],
+                                        });
+                                    </script>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </main>
+
+    {% include 'includes/footer.html' %}
+
+{% endblock %}

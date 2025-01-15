@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}
+    Регистрация — LosDesign
+{% endblock %}
+
+{% block content %}
+
+    <div class="form__block__1" data-aos="fade-in">
+        <div>
+            <picture>
+                <img src="{% static 'img/logo.svg' %}" alt="">
+            </picture>
+            <h3>Регистрация</h3>
+            {% if message %}
+                <div id="message__alert">
+                    <span class="alert__error">
+                        {{ message }}
+                    </span>
+                </div>
+            {% endif %}
+            <form method="post" class="needs-validation" novalidate>
+                {% csrf_token %}
+                <input type="text" name="name" class="form-control" placeholder="Как вас зовут?" value="{{ name_value }}" required>
+                <input type="email" name="email" class="form-control" placeholder="Ваша почта" value="{{ email_value }}" required>
+                <input type="password" name="password" class="form-control" value="{{ password_value }}" placeholder="Придумайте пароль" required>
+                <input type="submit" class="send" value="Создать профиль">
+                <a href="{% url 'cabinet:home' %}" class="registration">Войти в профиль</a>
+            </form>
+        </div>
+        <ul class="cpy">
+            <li><a href="{% url 'cabinet:text_page' 'oferta' %}">Оферта</a></li>
+            <li><a href="{% url 'cabinet:text_page' 'kontakty' %}">Контакты</a></li>
+            <li><a href="{% url 'cabinet:text_page' 'rekvizity' %}">Реквизиты</a></li>
+            <li><a href="{% url 'cabinet:text_page' 'politika-konfidencialnosti' %}">Политика конфиденциальности</a></li>
+        </ul>
+    </div>
+
+{% endblock %}

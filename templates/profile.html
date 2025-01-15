@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}
+    Профиль — LosDesign
+{% endblock %}
+
+{% block content %}
+
+    {% include 'includes/header.html' %}
+
+        <main>
+            <div class="container lesson__title">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8 text-center lesson__head">
+                        <h3>Настройки профиля</h3>
+                        <a href="{% url 'cabinet:cabinet' %}" class="back__arrow">
+                            <svg width="18" height="16" viewBox="0 0 18 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9.02102 15.5597C9.00621 15.5746 8.55225 15.6884 8.01229 15.8125C7.47227 15.9366 7.02461 16.0192 7.01741 15.9961C7.01028 15.973 6.9544 15.5982 6.8933 15.1632C6.77057 14.2896 6.47341 13.2697 6.15588 12.6318C5.16614 10.6438 3.39036 9.32745 1.23658 8.98532L0.688129 8.89818V8.01998V7.1417L1.18523 7.0583C4.44202 6.51191 6.56529 4.07678 6.96249 0.432595C6.98841 0.194633 7.0194 0 7.03133 0C7.14117 0 8.96117 0.438616 8.99559 0.473361C9.02048 0.498487 9.00196 0.721568 8.95438 0.969012C8.42773 3.70904 6.91977 5.93867 4.96291 6.87093L4.49352 7.09457L14.1462 7.11208L17.3125 7.1232V8.90055L14.1305 8.91168L4.50058 8.92926L5.09319 9.22951C6.63056 10.0084 7.84773 11.5363 8.56452 13.587C8.76877 14.1713 9.07697 15.5033 9.02102 15.5597Z"/>
+                            </svg>
+                            {% if user.profile.is_active %}
+                                Вернуться к модулям
+                            {% else %}
+                                На главную
+                            {% endif %}
+                        </a>
+                    </div>
+                    <div class="col-lg-8 pt-4" style="position: relative;">
+                        {% if messages %}
+                            <div id="message__alert" class="inner__allert">
+                                {% for message in messages %}
+                                    <span class="alert__{{ message.tags }}">
+                                        {{ message }}
+                                    </span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <form class="profile__form" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div>
+                                <div class="profile__photo">
+                                    <input type="file" name="photo" id="profile__photo">
+                                    <label for="profile__photo">
+                                        <picture>
+                                            <img src="{% if user.profile.photo %}{{ user.profile.photo.url }}{% else %}{% static 'img/ava.svg' %}{% endif %}" alt="">
+                                        </picture>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="profile__info">
+                                <div>
+                                    <h4>{% firstof user.profile.name user.username %}</h4>
+                                    <span>{{ user.email }}</span>
+                                </div>
+                                <div>
+                                    <div>
+                                        <label for="name">Имя</label>
+                                        <input type="text" name="name" value="{{ user.profile.name }}" class="form-control" maxlength="100" placeholder="Ваше имя" id="name">
+                                    </div>
+                                    <div>
+                                        <label for="phone">Телефон</label>
+                                        <input type="text" name="phone" value="{{ user.profile.phone }}" maxlength="100" class="phonee form-control" placeholder="Ваш телефон" id="phone">
+                                    </div>
+                                    <div>
+                                        <label for="location">Адрес</label>
+                                        <input type="text" name="location" value="{{ user.profile.location }}" class="form-control" maxlength="100" placeholder="Ваш адрес" id="location">
+                                    </div>
+                                    <div>
+                                        <label for="bio">О себе</label>
+                                        <textarea name="bio" cols="40" rows="10" maxlength="500" placeholder="Коротко о себе" class="form-control" id="bio">{{ user.profile.bio }}</textarea>
+                                    </div>
+                                    <button type="submit">Обновить профиль</button>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="reset__passwords__profile profile__info">
+                            <h4>Изменить пароль</h4>
+                            <form action="{% url 'cabinet:change_password' user.username %}" method="post" class="needs-validation" novalidate>
+                                {% csrf_token %}
+                                <div>
+                                    <label for="old_password">Старый пароль</label>
+                                    <input type="password" name="old_password" class="form-control" placeholder="Старый пароль" id="old_password" required>
+                                </div>
+                                <div>
+                                    <label for="new_password1">Новый пароль</label>
+                                    <input type="password" name="new_password1" class="form-control" placeholder="Новый пароль" id="new_password1" required>
+                                </div>
+                                <div class="mb-2">
+                                    <label for="new_password2">Повторите пароль</label>
+                                    <input type="password" name="new_password2" class="form-control" placeholder="Повторите пароль" id="new_password2" required>
+                                </div>
+                                <div>
+                                    <button type="submit">Обновить пароль</button>
+                                    <a href="{% url 'cabinet:password_reset' %}" class="reset__password">Забыл пароль</a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+    {% include 'includes/footer.html' %}
+
+{% endblock %}

@@ -1,0 +1,101 @@
+{% load static %}
+
+<header>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <div>
+                    <a href="{% url 'cabinet:home' %}">
+                        <picutre>
+                            <img src="{% static 'img/logo.svg' %}" alt="">
+                        </picutre>
+                    </a>
+                </div>
+                {% if request.user.is_authenticated %}
+                    <div>
+                        {% if user.profile.is_active %}
+                            <div>
+                                <a href="{% url 'cabinet:notifications' %}" class="me-3">
+                                    <svg width="27" height="28" viewBox="0 0 27 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M18.425 14.5162H18.4363" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M13.4133 14.5162H13.4246" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M8.4016 14.5162H8.41285" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M22.3388 22.8373C18.5199 26.6579 12.862 27.4834 8.23288 25.3425C7.54951 25.0674 3.12642 26.2923 2.16668 25.3337C1.20694 24.3739 2.43299 19.9502 2.15788 19.2667C0.016057 14.6382 0.842639 8.97825 4.66275 5.15887C9.53934 0.280375 17.4622 0.280375 22.3388 5.15887C27.2254 10.0449 27.2154 17.9601 22.3388 22.8373Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </a>
+                                <a href="#" class="position-relative" data-bs-toggle="dropdown">
+                                    <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M15.9945 5.35226C10.0821 5.35226 7.51326 10.7059 7.51326 14.245C7.51326 16.89 7.89675 16.1116 6.43262 19.3383C4.64469 23.9364 11.8345 25.8158 15.9945 25.8158C20.1533 25.8158 27.3431 23.9364 25.5564 19.3383C24.0923 16.1116 24.4758 16.89 24.4758 14.245C24.4758 10.7059 21.9056 5.35226 15.9945 5.35226Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M19.0741 29.3496C17.3483 31.2772 14.6563 31.3001 12.9141 29.3496" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <circle cx="32" cy="2" r="2" fill="#EEF2FF"/>
+                                    </svg>
+                                    {% if new_comments %}
+                                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                            {{ new_comments }}
+                                        </span>
+                                    {% endif %}
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-end user__menu user__notifications">
+                                    {% for comment in comments_header %}
+                                        {% if comment.user != user %}
+                                            <div>
+                                                <div>
+                                                    <a href="{% url 'cabinet:mark_comment_as_viewed' comment.pk %}#comment_{{ comment.pk }}">
+                                                        {% if not comment.is_viewed %}
+                                                            <em>Новое сообщение</em>
+                                                        {% endif %}
+                                                        <span>Урок «{{ comment.notification.lesson.title }}»</span>
+                                                        <p>Читать комментарий →</p>
+                                                        <i>{{ comment.created_at }}</i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    {% empty %}
+                                        <p class="p-3">Уведомлений пока нет ...</p>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+                        <div>
+                            <picture data-bs-toggle="dropdown">
+                                <img src="{% if user.profile.photo %}{{ user.profile.photo.url }}{% else %}{% static 'img/ava.svg' %}{% endif %}" alt="">
+                            </picture>
+                            <div class="dropdown-menu dropdown-menu-end user__menu">
+                                <div>
+                                    <b>{% firstof user.profile.name user.username %}</b>
+                                    <span>{{ user.email }}</span>
+                                </div>
+                                <div>
+                                    <a href="{% url 'cabinet:profile' user.username %}">
+                                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <g id="Iconly/Curved/Setting">
+                                                <g id="Setting">
+                                                    <path id="Stroke 1" fill-rule="evenodd" clip-rule="evenodd" d="M9.99984 7.91667C11.1506 7.91667 12.0832 8.84927 12.0832 10C12.0832 11.1507 11.1506 12.0833 9.99984 12.0833C8.8491 12.0833 7.9165 11.1507 7.9165 10C7.9165 8.84927 8.8491 7.91667 9.99984 7.91667Z" stroke="#375EE1" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                                    <path id="Stroke 3" fill-rule="evenodd" clip-rule="evenodd" d="M16.8065 6.04187V6.04187C16.2369 5.04833 14.9759 4.70837 13.9903 5.28211C13.133 5.78011 12.0616 5.15699 12.0616 4.16015C12.0616 3.0135 11.1381 2.08334 9.99964 2.08334V2.08334C8.86121 2.08334 7.93772 3.0135 7.93772 4.16015C7.93772 5.15699 6.86631 5.78011 6.00983 5.28211C5.02341 4.70837 3.7624 5.04833 3.19278 6.04187C2.62397 7.03542 2.96149 8.30554 3.94791 8.87846C4.80439 9.37729 4.80439 10.6227 3.94791 11.1215C2.96149 11.6953 2.62397 12.9654 3.19278 13.9581C3.7624 14.9517 5.02341 15.2916 6.00902 14.7187H6.00983C6.86631 14.2199 7.93772 14.843 7.93772 15.8399V15.8399C7.93772 16.9865 8.86121 17.9167 9.99964 17.9167V17.9167C11.1381 17.9167 12.0616 16.9865 12.0616 15.8399V15.8399C12.0616 14.843 13.133 14.2199 13.9903 14.7187C14.9759 15.2916 16.2369 14.9517 16.8065 13.9581C17.3761 12.9654 17.0378 11.6953 16.0522 11.1215H16.0514C15.1949 10.6227 15.1949 9.37729 16.0522 8.87846C17.0378 8.30554 17.3761 7.03542 16.8065 6.04187Z" stroke="#375EE1" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                                </g>
+                                            </g>
+                                        </svg>
+                                        Настройки профиля
+                                    </a>
+                                    <a href="/logout/">
+                                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <g id="Iconly/Curved/Logout">
+                                                <g id="Logout">
+                                                    <path id="Stroke 1" d="M18.1592 10.1006H8.125" stroke="#375EE1" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                                    <path id="Stroke 3" d="M15.7202 7.67058L18.1602 10.1006L15.7202 12.5306" stroke="#375EE1" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                                    <path id="Stroke 4" d="M13.6333 6.35825C13.3583 3.37491 12.2416 2.29158 7.79997 2.29158C1.88247 2.29158 1.88247 4.21658 1.88247 9.99991C1.88247 15.7832 1.88247 17.7082 7.79997 17.7082C12.2416 17.7082 13.3583 16.6249 13.6333 13.6416" stroke="#375EE1" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                                </g>
+                                            </g>
+                                        </svg>
+                                        Выйти
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</header>

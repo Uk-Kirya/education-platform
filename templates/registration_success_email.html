@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Успешная регистрация</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
+        }
+        .header {
+            background-color: #3EFF97;
+            color: #0E0D11;
+            padding: 16px;
+            text-align: center;
+            border-radius: 2rem;
+        }
+        .header svg {
+            width: 50%;
+            height: auto;
+            margin-top: 1rem;
+        }
+        .content {
+            padding: 20px;
+        }
+        .content p {
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        .content a {
+            color: #007BFF;
+            text-decoration: none;
+        }
+        .footer {
+            text-align: center;
+            padding: 10px;
+            font-size: 14px;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <picture>
+                <img src="{% static 'img/logo_registration_success.svg' %}" alt="">
+            </picture>
+            <h1>Успешная регистрация</h1>
+            <h4>go.losdesign.ru</h4>
+        </div>
+        <div class="content">
+            <p>Здравствуйте, <b>{{ name }}</b></p>
+            <p>Данным письмом мы подтверждаем вашу регистрацию на платформе LosDesign</p>
+            <p><b>Данные для входа в учебный кабинет:</b></p>
+            <ul>
+                <li><b>Ссылка для входа:</b> <a href="{{ protocol }}://{{ domain }}" target="_blank">{{ domain }}</a></li>
+                <li><b>Логин:</b> {{ email }}</li>
+                <li><b>Пароль:</b> <i>введенный вами пароль</i></li>
+            </ul>
+            <p>Надеемся, ваше обучение будет комфортным!</p>
+        </div>
+        <div class="footer">
+            <p>Если вы не регистрировались на платформе LosDesign — проигнорируйте данное письмо</p>
+        </div>
+    </div>
+</body>
+</html>
