@@ -40,6 +40,7 @@ def login_view(request: HttpRequest) -> HttpResponse:
         context = {
             'message': False
         }
+        
         return render(request, 'main.html', context=context)
 
     email = request.POST['email']
@@ -60,6 +61,7 @@ def login_view(request: HttpRequest) -> HttpResponse:
     context = {
         'message': 'Введенный пароль неверный'
     }
+
     return render(request, 'main.html', context=context)
 
 
