@@ -1,1 +1,18 @@
-*.mp4
+# Логи
+debug.log
+errors.log
+
+# Кеш Python
+__pycache__/
+
+# Настройки редактора (VSCode)
+.vscode/
+
+# Системный файл (MacOS)
+.DS_Store
+
+# Базы данных
+db.sqlite3
+
+# Загружаемые файлы
+media/
