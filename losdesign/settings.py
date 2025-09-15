@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-6vj6u7e5_43-(nr5p#=oqajq^!53g$@%-mq%(p5-*xudy#8vgt'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 LOGGING = {
     'version': 1,
@@ -72,13 +72,13 @@ LOGGING = {
     },
 }
 
-ALLOWED_HOSTS = ['losdesign.lc', '127.0.0.1', 'localhost', 'go.losdesign.ru']
+ALLOWED_HOSTS = ['losdesign.lc', '127.0.0.1', 'localhost', 'go.loscourse.ru']
 
-DOMAIN = 'go.losdesign.ru'
+DOMAIN = 'go.loscourse.ru'
 PROTOCOL = 'https'
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://go.losdesign.ru',
+    'https://go.loscourse.ru',
 ]
 
 
