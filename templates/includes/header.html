@@ -23,18 +23,20 @@
                                         <path fill-rule="evenodd" clip-rule="evenodd" d="M22.3388 22.8373C18.5199 26.6579 12.862 27.4834 8.23288 25.3425C7.54951 25.0674 3.12642 26.2923 2.16668 25.3337C1.20694 24.3739 2.43299 19.9502 2.15788 19.2667C0.016057 14.6382 0.842639 8.97825 4.66275 5.15887C9.53934 0.280375 17.4622 0.280375 22.3388 5.15887C27.2254 10.0449 27.2154 17.9601 22.3388 22.8373Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                     </svg>
                                 </a>
-                                <a href="#" class="position-relative" data-bs-toggle="dropdown">
-                                    <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M15.9945 5.35226C10.0821 5.35226 7.51326 10.7059 7.51326 14.245C7.51326 16.89 7.89675 16.1116 6.43262 19.3383C4.64469 23.9364 11.8345 25.8158 15.9945 25.8158C20.1533 25.8158 27.3431 23.9364 25.5564 19.3383C24.0923 16.1116 24.4758 16.89 24.4758 14.245C24.4758 10.7059 21.9056 5.35226 15.9945 5.35226Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                        <path d="M19.0741 29.3496C17.3483 31.2772 14.6563 31.3001 12.9141 29.3496" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                        <circle cx="32" cy="2" r="2" fill="#EEF2FF"/>
-                                    </svg>
-                                    {% if new_comments %}
-                                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                            {{ new_comments }}
-                                        </span>
-                                    {% endif %}
-                                </a>
+                                {% if not request.user.is_superuser %}
+                                    <a href="#" class="position-relative" data-bs-toggle="dropdown">
+                                        <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M15.9945 5.35226C10.0821 5.35226 7.51326 10.7059 7.51326 14.245C7.51326 16.89 7.89675 16.1116 6.43262 19.3383C4.64469 23.9364 11.8345 25.8158 15.9945 25.8158C20.1533 25.8158 27.3431 23.9364 25.5564 19.3383C24.0923 16.1116 24.4758 16.89 24.4758 14.245C24.4758 10.7059 21.9056 5.35226 15.9945 5.35226Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M19.0741 29.3496C17.3483 31.2772 14.6563 31.3001 12.9141 29.3496" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <circle cx="32" cy="2" r="2" fill="#EEF2FF"/>
+                                        </svg>
+                                        {% if new_comments %}
+                                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                                {{ new_comments }}
+                                            </span>
+                                        {% endif %}
+                                    </a>
+                                {% endif %}
                                 <div class="dropdown-menu dropdown-menu-end user__menu user__notifications">
                                     {% for comment in comments_header %}
                                         {% if comment.user != user %}

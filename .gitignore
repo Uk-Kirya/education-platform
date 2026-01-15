@@ -2,8 +2,10 @@
 debug.log
 errors.log
 
-# Кеш Python
+# Python cache
 __pycache__/
+*.py[cod]
+*$py.class
 
 # Настройки редактора (VSCode)
 .vscode/
@@ -11,8 +13,11 @@ __pycache__/
 # Системный файл (MacOS)
 .DS_Store
 
-# Базы данных
-db.sqlite3
+# База данных
+*.sqlite3
 
-# Загружаемые файлы
+# Папки с загруженными данными
 media/
+
+# Папка с сообщениями
+sent_emails/

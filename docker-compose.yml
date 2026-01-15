@@ -1,0 +1,12 @@
+version: "3.9"
+services:
+  django:
+    build: .
+    container_name: edu_platform
+    volumes:
+      - .:/app
+      - ./media:/app/media
+      - ./staticfiles:/app/staticfiles
+    ports:
+      - "8000:8000"
+    restart: always

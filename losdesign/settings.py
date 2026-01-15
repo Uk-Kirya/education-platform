@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-6vj6u7e5_43-(nr5p#=oqajq^!53g$@%-mq%(p5-*xudy#8vgt'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 LOGGING = {
     'version': 1,
@@ -201,17 +201,17 @@ PASSWORD_RESET_TIMEOUT = 3600  # Время жизни токена сброса
 
 
 # Email
-# EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
-# EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent_emails')
+EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent_emails')
 
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.mail.ru'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'hello@losdesign.ru'
-EMAIL_HOST_PASSWORD = 'hvPD7SDIkgqoDbLBJ5zH'
-DEFAULT_FROM_EMAIL = 'hello@losdesign.ru'
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'smtp.mail.ru'
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# EMAIL_HOST_USER = 'hello@losdesign.ru'
+# EMAIL_HOST_PASSWORD = 'hvPD7SDIkgqoDbLBJ5zH'
+# DEFAULT_FROM_EMAIL = 'hello@losdesign.ru'
 
 
 LOGIN_REDIRECT_URL = reverse_lazy('cabinet:cabinet')
