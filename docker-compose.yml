@@ -8,5 +8,5 @@ services:
       - ./media:/app/media
       - ./staticfiles:/app/staticfiles
     ports:
-      - "8000:8000"
+      - "8007:8000"
     restart: always
