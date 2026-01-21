@@ -489,7 +489,7 @@ def create_payment(request: HttpRequest) -> HttpResponse:
         },
         "confirmation": {
             "type": "redirect",
-            "return_url": "https://go.losdesign.ru/cabinet/was-paid-for/"
+            "return_url": "https://go.loscourse.ru/cabinet/was-paid-for/"
         },
         "capture": True,
         "description": f"Заказ №{user.id}"
