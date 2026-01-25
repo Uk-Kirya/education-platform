@@ -22,124 +22,130 @@
                         Вернуться к модулям
                     </a>
                 </div>
-                <div class="col-12 pt-4">
-                    <nav>
-                        <div class="nav nav-tabs modules_tabs">
+                {% if modules %}
+                    <div class="col-12 pt-4">
+                        <nav>
+                            <div class="nav nav-tabs modules_tabs">
+                                {% for module in modules %}
+                                    {% if module.lessons.all %}
+                                        <button class="nav-link {% if forloop.first %} active {% endif %}" data-bs-toggle="tab" data-bs-target="#nav_{{ module.pk }}">
+                                            {{ module.title }}
+                                        </button>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </nav>
+                        <div class="tab-content modules_tabs_content">
                             {% for module in modules %}
-                                <button class="nav-link {% if forloop.first %} active {% endif %}" data-bs-toggle="tab" data-bs-target="#nav_{{ module.pk }}">
-                                    {{ module.title }}
-                                </button>
-                            {% endfor %}
-                        </div>
-                    </nav>
-                    <div class="tab-content modules_tabs_content">
-                        {% for module in modules %}
-                            <div class="tab-pane fade {% if forloop.first %} show active {% endif %}" id="nav_{{ module.pk }}">
-                                <div class="nav">
-                                    {% for lesson in module.lessons.all %}
-                                        {% if lesson.has_homework %}
-                                            <button class="nav-link {% if forloop.first %} active {% endif %}" data-bs-toggle="pill" data-bs-target="#v_{{ lesson.pk }}">
-                                                {{ lesson.title }}
-                                                <svg width="7" height="12" viewBox="0 0 7 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M0.589989 11.8299C0.363233 11.6032 0.363233 11.2355 0.589989 11.0088L5.59877 6L0.589989 0.991223C0.363233 0.764468 0.363233 0.396823 0.589989 0.170068C0.816745 -0.0566883 1.18439 -0.0566883 1.41115 0.170068L6.8305 5.58942C7.05726 5.81618 7.05726 6.18382 6.8305 6.41058L1.41115 11.8299C1.18439 12.0567 0.816745 12.0567 0.589989 11.8299Z"/>
-                                                </svg>
-                                            </button>
-                                        {% endif %}
-                                    {% endfor %}
-                                </div>
-                                <div class="tab-content">
-                                    {% for lesson in module.lessons.all %}
-                                        {% if lesson.has_homework %}
-                                            <div class="tab-pane fade {% if forloop.first %} show active {% endif %}" id="v_{{ lesson.pk }}">
-                                                <div class="lesson_header">
-                                                    {{ module.title }}
-                                                    <h4>{{ lesson.title }}</h4>
-                                                </div>
-                                                {% for notification in lesson.notifications.all %}
-                                                    {% if notification.user == user %}
-                                                        <div class="user_chat_content">
-                                                            <div>
-                                                                <picture>
-                                                                    <img src="{% if notification.user.profile.photo %}{{ notification.user.profile.photo.url }}{% else %}{% static 'img/ava.svg' %}{% endif %}" alt="">
-                                                                </picture>
-                                                                <div class="d-sm-none">
-                                                                    <div>
-                                                                        {{ notification.created_at }}
-                                                                    </div>
-                                                                    <div>
-                                                                        {% firstof notification.user.profile.name notification.user.username %}
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div>
-                                                                <div class="d-none d-sm-flex">
-                                                                    <div>
-                                                                        {% firstof notification.user.profile.name notification.user.username %}
-                                                                    </div>
-                                                                    <div>
-                                                                        {{ notification.created_at }}
-                                                                    </div>
-                                                                </div>
-                                                                <div>
-                                                                    {{ notification.text|safe }}
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-                                                        {% for comment in notification.comments.all %}
+                                <div class="tab-pane fade {% if forloop.first %} show active {% endif %}" id="nav_{{ module.pk }}">
+                                    <div class="nav">
+                                        {% for lesson in module.lessons.all %}
+                                            {% if lesson.has_homework %}
+                                                <button class="nav-link {% if forloop.first %} active {% endif %}" data-bs-toggle="pill" data-bs-target="#v_{{ lesson.pk }}">
+                                                    {{ lesson.title }}
+                                                    <svg width="7" height="12" viewBox="0 0 7 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M0.589989 11.8299C0.363233 11.6032 0.363233 11.2355 0.589989 11.0088L5.59877 6L0.589989 0.991223C0.363233 0.764468 0.363233 0.396823 0.589989 0.170068C0.816745 -0.0566883 1.18439 -0.0566883 1.41115 0.170068L6.8305 5.58942C7.05726 5.81618 7.05726 6.18382 6.8305 6.41058L1.41115 11.8299C1.18439 12.0567 0.816745 12.0567 0.589989 11.8299Z"/>
+                                                    </svg>
+                                                </button>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                    <div class="tab-content">
+                                        {% for lesson in module.lessons.all %}
+                                            {% if lesson.has_homework %}
+                                                <div class="tab-pane fade {% if forloop.first %} show active {% endif %}" id="v_{{ lesson.pk }}">
+                                                    <div class="lesson_header">
+                                                        {{ module.title }}
+                                                        <h4>{{ lesson.title }}</h4>
+                                                    </div>
+                                                    {% for notification in lesson.notifications.all %}
+                                                        {% if notification.user == user %}
                                                             <div class="user_chat_content">
                                                                 <div>
-                                                                    <div>
-                                                                        <picture>
-                                                                            <img src="{% if comment.user.profile.photo %}{{ comment.user.profile.photo.url }}{% else %}{% static 'img/ava.svg' %}{% endif %}" alt="">
-                                                                        </picture>
-                                                                    </div>
-                                                                    <div class="d-sm-none w-100">
+                                                                    <picture>
+                                                                        <img src="{% if notification.user.profile.photo %}{{ notification.user.profile.photo.url }}{% else %}{% static 'img/ava.svg' %}{% endif %}" alt="">
+                                                                    </picture>
+                                                                    <div class="d-sm-none">
                                                                         <div>
-                                                                            {{ comment.created_at }}
+                                                                            {{ notification.created_at }}
                                                                         </div>
                                                                         <div>
-                                                                            {% firstof comment.user.profile.name notification.user.username %}
-                                                                            {% if comment.user.username == 'admin' %}
-                                                                                <span>Куратор</span>
-                                                                            {% endif %}
+                                                                            {% firstof notification.user.profile.name notification.user.username %}
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                                 <div>
                                                                     <div class="d-none d-sm-flex">
                                                                         <div>
-                                                                            {% firstof comment.user.profile.name notification.user.username %}
-                                                                            {% if comment.user.username == 'admin' %}
-                                                                                <span>Куратор</span>
-                                                                            {% endif %}
+                                                                            {% firstof notification.user.profile.name notification.user.username %}
                                                                         </div>
                                                                         <div>
-                                                                            {{ comment.created_at }}
+                                                                            {{ notification.created_at }}
                                                                         </div>
                                                                     </div>
                                                                     <div>
-                                                                        {{ comment.text|safe }}
+                                                                        {{ notification.text|safe }}
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        {% endfor %}
 
-                                                        {% if notification.is_done %}
-                                                            <div class="lesson_is_done mb-4">Урок пройден ✅</div>
+                                                            {% for comment in notification.comments.all %}
+                                                                <div class="user_chat_content">
+                                                                    <div>
+                                                                        <div>
+                                                                            <picture>
+                                                                                <img src="{% if comment.user.profile.photo %}{{ comment.user.profile.photo.url }}{% else %}{% static 'img/ava.svg' %}{% endif %}" alt="">
+                                                                            </picture>
+                                                                        </div>
+                                                                        <div class="d-sm-none w-100">
+                                                                            <div>
+                                                                                {{ comment.created_at }}
+                                                                            </div>
+                                                                            <div>
+                                                                                {% firstof comment.user.profile.name notification.user.username %}
+                                                                                {% if comment.user.username == 'admin' %}
+                                                                                    <span>Куратор</span>
+                                                                                {% endif %}
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div>
+                                                                        <div class="d-none d-sm-flex">
+                                                                            <div>
+                                                                                {% firstof comment.user.profile.name notification.user.username %}
+                                                                                {% if comment.user.username == 'admin' %}
+                                                                                    <span>Куратор</span>
+                                                                                {% endif %}
+                                                                            </div>
+                                                                            <div>
+                                                                                {{ comment.created_at }}
+                                                                            </div>
+                                                                        </div>
+                                                                        <div>
+                                                                            {{ comment.text|safe }}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            {% endfor %}
+
+                                                            {% if notification.is_done %}
+                                                                <div class="lesson_is_done mb-4">Урок пройден ✅</div>
+                                                            {% endif %}
+
                                                         {% endif %}
-
-                                                    {% endif %}
-                                                {% endfor %}
-                                                <a href="{% url 'cabinet:lesson' module.slug lesson.slug %}" class="go_to_lesson">Перейти к уроку</a>
-                                            </div>
-                                        {% endif %}
-                                    {% endfor %}
+                                                    {% endfor %}
+                                                    <a href="{% url 'cabinet:lesson' module.slug lesson.slug %}" class="go_to_lesson">Перейти к уроку</a>
+                                                </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
                                 </div>
-                            </div>
-                        {% endfor %}
+                            {% endfor %}
+                        </div>
                     </div>
-                </div>
+                {% else %}
+                    <p>Пока нет модулей</p>
+                {% endif %}
             </div>
         </div>
     </main>

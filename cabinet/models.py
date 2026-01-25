@@ -21,8 +21,8 @@ def user_directory_path_ava(instance, filename):
 
 class Profile(models.Model):
     class Meta:
-        verbose_name = "Профиль"
-        verbose_name_plural = "Профили"
+        verbose_name = "Студент"
+        verbose_name_plural = "Студенты"
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, blank=True, verbose_name='Имя')
@@ -54,6 +54,9 @@ class Profile(models.Model):
                 pass
 
         super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.name or self.user.username
 
 
 class Page(models.Model):
@@ -173,7 +176,7 @@ class Comment(models.Model):
         verbose_name = 'Комментарий'
         verbose_name_plural = 'Комментарии'
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments', verbose_name='Студент')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name='comments', verbose_name='Студент')
     notification = models.ForeignKey(Notification, on_delete=models.CASCADE, related_name='comments', verbose_name='Домашнее задание')
     text = RichTextUploadingField(verbose_name='Текст')
     file = models.FileField(upload_to=user_directory_path_lesson, blank=True, verbose_name='Файл')
@@ -181,6 +184,9 @@ class Comment(models.Model):
     is_viewed = models.BooleanField(default=False, verbose_name='Просмотрено студентом?')
 
     def save(self, *args, **kwargs):
+        if not self.user:
+            self.user = User.objects.get(username='admin')
+
         # Проверяем, создается ли новый объект
         is_new = not self.pk  # Если у объекта нет pk, значит, он новый
 
@@ -247,12 +253,19 @@ class Order(models.Model):
         verbose_name = 'Заказ'
         verbose_name_plural = 'Заказы'
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='orders')
-    payment_id = models.CharField(max_length=255, unique=True)
-    payment_status = models.CharField(max_length=50, default='pending')
-    payment_date = models.DateTimeField(auto_now_add=True)
-    amount = models.DecimalField(max_digits=10, decimal_places=2)
-    currency = models.CharField(max_length=3, default='RUB')
+    PAYMENT_STATUS = [
+        ('pending', 'В процессе'),
+        ('waiting_for_capture', 'Деньги заморожены'),
+        ('succeeded', 'Успешно'),
+        ('canceled', 'Отменен')
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='orders', verbose_name='Студент')
+    payment_id = models.CharField(max_length=255, unique=True, verbose_name='ID платежа')
+    payment_status = models.CharField(max_length=50, default='pending', verbose_name='Статус', choices=PAYMENT_STATUS)
+    payment_date = models.DateTimeField(auto_now_add=True, verbose_name='Дата')
+    amount = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Сумма')
+    currency = models.CharField(max_length=3, default='RUB', verbose_name='Валюта')
 
     def __str__(self):
         return f"Order #{self.id} by {self.user.username}"

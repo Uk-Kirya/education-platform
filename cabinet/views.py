@@ -1,13 +1,12 @@
 import random
-import json
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import logout, authenticate, login, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.hashers import check_password, make_password
+from django.contrib.auth.hashers import check_password
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
-from django.contrib.auth.views import LoginView, PasswordResetView, PasswordResetConfirmView
+from django.contrib.auth.views import PasswordResetView, PasswordResetConfirmView
 import math
 
 from django.core.exceptions import ValidationError
@@ -15,12 +14,10 @@ from django.core.mail import send_mail
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpRequest, HttpResponseRedirect
 from django.template.loader import render_to_string
-from django.urls import reverse_lazy, reverse
-from django.utils.decorators import method_decorator
+from django.urls import reverse
 from django.utils.html import strip_tags
 from django.views import View
-from django.views.decorators.csrf import csrf_protect, csrf_exempt
-from django.views.generic import TemplateView, CreateView, UpdateView, ListView, DetailView, FormView
+from django.views.generic import TemplateView, UpdateView, DetailView
 import re
 
 from .forms import HomeWorkSendForm, CommentForm
@@ -68,16 +65,41 @@ def login_view(request: HttpRequest) -> HttpResponse:
 @login_required
 def cabinet(request: HttpRequest) -> HttpResponse:
     modules = Module.objects.filter(status=True)
-    lessons = Lesson.objects.filter(has_homework=True)
-    lesson_done = Notification.objects.filter(is_done=True, user=request.user)
 
-    count_lessons_percent = (len(lesson_done) / len(lessons)) * 100
+    total_homeworks = Lesson.objects.filter(
+        has_homework=True,
+        module__status=True
+    ).count()
+
+    done_homeworks = Notification.objects.filter(
+        user=request.user,
+        is_done=True,
+        lesson__has_homework=True,
+        lesson__module__status=True
+    ).count()
+
+    lessons_with_hw = Module.objects.filter(
+        status=True,
+        lessons__has_homework=True,
+    ).exists()
+
+    count_lessons_percent = done_homeworks / total_homeworks * 100
 
     lessons_done_count = {}
     lessons_with_homework = {}
     for module in modules:
-        lessons_done_count[module.id] = lesson_done.filter(lesson__module=module).count()
-        lessons_with_homework[module.id] = lessons.filter(module=module).count()
+        lessons_done_count[module.id] = Notification.objects.filter(
+            user=request.user,
+            is_done=True,
+            lesson__module=module,
+            lesson__has_homework=True,
+            lesson__module__status=True
+        ).count()
+        lessons_with_homework[module.id] = Lesson.objects.filter(
+            has_homework=True,
+            module=module,
+            module__status=True
+        ).count()
 
     greetings = [
         'Сегодня прекрасный день, чтобы узнать что-то новое!',
@@ -96,13 +118,14 @@ def cabinet(request: HttpRequest) -> HttpResponse:
     context = {
         'user': request.user,
         'modules': modules,
-        'lesson_done': lesson_done,
         'lessons_done_count': lessons_done_count,
-        'lessons': lessons,
+        'total_homeworks': total_homeworks,
+        'done_homeworks': done_homeworks,
         'lessons_with_homework': lessons_with_homework,
         'count_lessons_percent': math.floor(count_lessons_percent),
         'greeting': greeting,
         'payment_status': payment_status,
+        'lessons_with_hw': lessons_with_hw,
     }
     return render(request, 'cabinet.html', context=context)
 
@@ -324,9 +347,10 @@ class ModuleDetailView(LoginRequiredMixin, DetailView):
     context_object_name = 'module'
 
     def get(self, request, *args, **kwargs):
-        if not self.request.user.profile.is_active:
+        if self.request.user.is_staff or self.request.user.profile.is_active:
+            return super().get(request, *args, **kwargs)
+        else:
             return redirect('cabinet:home')
-        return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -369,9 +393,10 @@ class LessonDetailView(LoginRequiredMixin, DetailView):
     context_object_name = 'lesson'
 
     def get(self, request, *args, **kwargs):
-        if not self.request.user.profile.is_active:
+        if self.request.user.is_staff or self.request.user.profile.is_active:
+            return super().get(request, *args, **kwargs)
+        else:
             return redirect('cabinet:home')
-        return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

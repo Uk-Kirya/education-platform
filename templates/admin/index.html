@@ -1,0 +1,77 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block content %}
+<div class="custom-admin-dashboard">
+    <div class="module">
+        <div class="dashboard-links">
+            <div class="dashboard-item">
+                <h1 style="margin: 0; font-size: 2rem;">👋 Добро пожаловать, {{ user.get_full_name }}!</h1>
+            </div>
+        </div>
+    </div>
+    <div class="module">
+        <div class="dashboard-links">
+            <div class="dashboard-item">
+                <h3><a href="{% url 'admin:cabinet_module_changelist' %}">🗂 Модули ({{ modules_count }})</a></h3>
+                <p style="margin: 0;">Управление модулями</p>
+            </div>
+            <div class="dashboard-item">
+                <h3><a href="{% url 'admin:cabinet_lesson_changelist' %}">📚 Уроки ({{ lessons_count }})</a></h3>
+                <p style="margin: 0;">Управление уроками</p>
+            </div>
+            <div class="dashboard-item">
+                <h3><a href="{% url 'admin:cabinet_notification_changelist' %}">📖 Домашние задания ({{ hw_count }})</a></h3>
+                <p style="margin: 0;">Управление домашними заданиями</p>
+            </div>
+            <div class="dashboard-item">
+                <h3><a href="{% url 'admin:cabinet_profile_changelist' %}">👨‍🎓 Студенты ({{ students_count }})</a></h3>
+                <p style="margin: 0;">Управление студентами</p>
+            </div>
+            <div class="dashboard-item">
+                <h3><a href="{% url 'admin:cabinet_order_changelist' %}">🧾 Заказы ({{ orders_count }})</a></h3>
+                <p style="margin: 0;">Управление заказами</p>
+            </div>
+            <div class="dashboard-item">
+                <h3><a href="{% url 'admin:cabinet_page_changelist' %}">📝 Страницы ({{ pages_count }})</a></h3>
+                <p style="margin: 0;">Управление страницами</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Стандартные блоки Django -->
+    {{ block.super }}
+</div>
+
+<style>
+.custom-admin-dashboard {
+    margin-bottom: 20px;
+}
+.dashboard-links {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
+}
+.dashboard-item {
+    background: var(--darkened-bg);
+    padding: 15px;
+    border-radius: 5px;
+    border-left: 4px solid #417690;
+}
+.dashboard-item h3 {
+    margin-top: 0;
+}
+.dashboard-item a {
+    text-decoration: none;
+    color: #417690;
+}
+.dashboard-item a:hover {
+    color: #264b5d;
+}
+.colM > h1 {
+    display: none;
+}
+</style>
+
+{% endblock %}

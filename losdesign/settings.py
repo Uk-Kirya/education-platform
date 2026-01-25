@@ -120,6 +120,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'cabinet.context_all.context_all',
+                'cabinet.context_all.admin_stats',
             ],
         },
     },
@@ -201,16 +202,16 @@ PASSWORD_RESET_TIMEOUT = 3600  # Время жизни токена сброса
 
 
 # Email
-# EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent_emails')
 
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.mail.ru'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'info@losdesign.ru'
-EMAIL_HOST_PASSWORD = 'bqTawm04chqlrkaFBlcw'
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'smtp.mail.ru'
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# EMAIL_HOST_USER = 'info@losdesign.ru'
+# EMAIL_HOST_PASSWORD = 'bqTawm04chqlrkaFBlcw'
 DEFAULT_FROM_EMAIL = 'info@losdesign.ru'
 
 

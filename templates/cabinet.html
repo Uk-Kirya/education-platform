@@ -12,32 +12,53 @@
     {% include 'includes/header.html' %}
 
     <main>
-        {% if user.profile.is_active %}
+        {% if user.profile.is_active or user.is_staff %}
             <div class="container">
                 <div class="row">
                     <div class="col-12">
                         <div class="header__block">
                             <h2>Привет, {% firstof user.profile.name user.username %}!</h2>
-                            <p>{{ greeting }}</p>
+                            {% if not request.user.is_staff %}
+                                <p>{{ greeting }}</p>
+                            {% endif %}
                         </div>
-                        <div class="statusbar__header">
-                            Выполнено {{ lesson_done|length }} из {{ lessons|length }} заданий
-                            <div class="progress">
-                                <div class="progress-bar" role="progressbar" style="width: {{ count_lessons_percent }}%" aria-valuenow="{{ count_lessons_percent }}" aria-valuemin="0" aria-valuemax="100"></div>
+                        {% if request.user.is_staff %}
+                            <div class="statusbar__header">
+                                Предпросмотр материала
                             </div>
-                        </div>
+                        {% else %}
+                            {% if lessons_with_hw %}
+                                <div class="statusbar__header">
+                                    Выполнено {{ done_homeworks }} из {{ total_homeworks }} заданий
+                                    <div class="progress">
+                                        <div
+                                            class="progress-bar"
+                                            role="progressbar"
+                                            style="width: {{ count_lessons_percent }}%"
+                                            aria-valuenow="{{ count_lessons_percent }}"
+                                            aria-valuemin="0"
+                                            aria-valuemax="100"
+                                        ></div>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <div class="mb-4"></div>
+                            {% endif %}
+                        {% endif %}
                     </div>
                     {% for module in modules %}
                         <div class="col-md-6 col-lg-4">
                             <div class="module">
                                 <a href="{% url 'cabinet:module' slug=module.slug %}">
-                                    {% if lessons_with_homework|get_item:module.id > 0 %}
-                                        {% if lessons_done_count|get_item:module.id == lessons_with_homework|get_item:module.id %}
-                                            <picture class="is_done">
-                                                <img src="{% static 'img/done.svg' %}" alt="">
-                                            </picture>
-                                        {% else %}
-                                            <span>Выполнено {{ lessons_done_count|get_item:module.id }} из {{ lessons_with_homework|get_item:module.id }} заданий</span>
+                                    {% if not request.user.is_staff %}
+                                        {% if lessons_with_homework|get_item:module.id > 0 %}
+                                            {% if lessons_done_count|get_item:module.id == lessons_with_homework|get_item:module.id %}
+                                                <picture class="is_done">
+                                                    <img src="{% static 'img/done.svg' %}" alt="">
+                                                </picture>
+                                            {% else %}
+                                                <span>Выполнено {{ lessons_done_count|get_item:module.id }} из {{ lessons_with_homework|get_item:module.id }} заданий</span>
+                                            {% endif %}
                                         {% endif %}
                                     {% endif %}
                                     <div class="ratio ratio-16x9">
@@ -55,6 +76,8 @@
                                 </a>
                             </div>
                         </div>
+                    {% empty %}
+                        <p>Пока ничего нет</p>
                     {% endfor %}
                 </div>
             </div>
@@ -81,8 +104,9 @@
                                         <a href="{% url 'cabinet:was_paid_for' %}">Обновить статус</a>
                                     </p>
                                 {% else %}
-                                    <p>Перед началом обучения, вам необходимо произвести оплату за курс в размере <b>20.000 рублей.</b></p>
+                                    <p>Перед началом обучения, вам необходимо произвести оплату за курс в размере <b>20 000 руб.</b></p>
                                     <a href="{% url 'cabinet:create_payment' %}">Оплатить курс</a>
+                                    <!--<a href="{% url 'cabinet:create_payment' %}">Оплатить курс</a>-->
                                 {% endif %}
                             </div>
                         </div>

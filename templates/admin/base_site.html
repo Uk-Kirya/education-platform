@@ -1,0 +1,17 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block extrahead %}
+    <link rel="shortcut icon" href="{% static 'img/fav.png' %}" type="image/x-icon">
+{% endblock %}
+
+{% block title %}{{ title }} | Los-Platform{% endblock %}
+
+{% block branding %}
+    <h1 id="site-name">
+        <a href="{% url 'admin:index' %}">
+            Los-Platform
+        </a>
+    </h1>
+    {% now "d.m.Y H:i" %}
+{% endblock %}
