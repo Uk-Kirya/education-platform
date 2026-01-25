@@ -72,13 +72,13 @@ LOGGING = {
     },
 }
 
-ALLOWED_HOSTS = ['losdesign.lc', '127.0.0.1', 'localhost', 'go.loscourse.ru']
+ALLOWED_HOSTS = ['losdesign.lc', '127.0.0.1', 'localhost', 'demo.losplatform.ru']
 
-DOMAIN = 'go.loscourse.ru'
+DOMAIN = 'demo.losplatform.ru'
 PROTOCOL = 'https'
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://go.loscourse.ru',
+    'https://demo.losplatform.ru',
 ]
 
 
